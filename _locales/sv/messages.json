@@ -1,0 +1,102 @@
+{
+  "name": {
+    "message": "Facebook Political Ad Collector",
+    "description": "Extension name"
+  },
+  "short_name": {
+    "message": "Facebook PAC",
+    "description": "Extension short name"
+  },
+  "description": {
+    "message": "Detta tillägg samlar in politiska annonser på Facebook.",
+    "description": "Description of the extension"
+  },
+  "rate_ads": {
+    "message": "Annonser jag ser",
+    "description": "Text for the 'Ads I'm Seeing' button in the extension."
+  },
+  "see_ads": {
+    "message": "Annonser andra ser",
+    "description":
+      "Text for the 'Ads Others are Seeing' button in the extension."
+  },
+  "political": {
+    "message": "Politisk",
+    "description": "Label for political radio button"
+  },
+  "normal": {
+    "message": "Vanlig",
+    "description": "Label for normal radio button"
+  },
+  "rating_question": {
+    "message": "Vilken typ av annons är detta?",
+    "description": "Question to ask for rating an ad"
+  },
+  "verify_question": {
+    "message": "Är denna annons politisk?",
+    "description": "Question to ask for rating an ad"
+  },
+  "language_settings": {
+    "message": "Dina språkinställningar",
+    "description": "Your Language Settings"
+  },
+  "you_speak": {
+    "message":
+      "Din browser tycker du talar <b>$language$</b> och bor i <b>$country$</b>.",
+    "description": "Your language and country",
+    "placeholders": {
+      "language": {
+        "content": "$1"
+      },
+      "country": {
+        "content": "$2"
+      }
+    }
+  },
+  "language_instructions": {
+    "message": "Om dessa inställningar är felaktiga ändra dem i fälten.",
+    "description": "Instructions to adapt if needed."
+  },
+  "language": {
+    "message": "Språk: ",
+    "description": "Language"
+  },
+  "country": {
+    "message": "Land: ",
+    "description": "Country: "
+  },
+  "terms_of_service": {
+    "message":
+      "<h2>Kan vå få ditt tillstånd?</h2> <p>The Globe and Mail tror på en hög grad av insyn i vår verksamhet. Så innan du anävnder detta tillägg, lägg några minuter på att förstå vad det gör. </p> <h2>Vad tillägget gör</h2> <p>Tillägget bäddar in ett skript på alla Facebooksidor du besöker. Skriptet letar efter annonser som det kommer lagra på din dator. </p> <h2>Hur du kan bidra</h2> <p> När du känner att du vill bidra till vår verksamhet kan du klicka på ikonen i verktygsraden i din webbläsare. Då öppnas ett popup-fönster som visar alla annonser som lagrats på din dator. Du kan kan hjälpa till att träna tillägget genom att klassificera annonserna som politiska eller vanlig. </p> <h2>Information vi tar emot</h2> <p> Vår server kommer ta emot rensad kod för annonser, Facebooks annons-id:n och annonsens demografiska urvalsparametrar (t.ex. personer över 18 som bor i Sverige), annonsens klassificering (politisk eller vanlig) och din webbläsares språkinställningar. I övrigt har vi försökt göra allt vi kan för att tillägget inte ska samla in information som kan identifiera dig som individ.</p> <h2>Vad gör vi med informationen?</h2> <p> Vi kommer skicka informationen till vår algoritm för att träna den på att identifiera politisk annonsering. Vi kommer också skicka dig politiska annonser som du inte sett men som andra rapporterat in till oss. När du vill veta vilka annonser andra ser kan du klicka på ikonen för 'Annonser andra ser' i din webbläsare. Vi kommer då läsa in ca 100 annonser. Tillägget kommer då jämföra dessa med annonserna på din dator och visa dig de som du inte set tidigare. Vi får själva ingen information om vilka annonser du sett.</p><h2>Hur kan jag avsluta mitt deltagande?</h2><p>Genom att installera tillägget begräftar du att informationen ovan, såväl som kategoriseringsdata för politiska annonser kommer att användas inom ramen för projektet.</p><p>Du kan avluta ditt deltagande närsomhelst genom att avinstallera tillägget. (Här hittar du instruktioner för <a href=\"https://support.google.com/chrome_webstore/answer/2664769?hl=en\">Chrome</a> och <a href=\"https://support.mozilla.org/en-US/kb/disable-or-remove-add-ons\">Firefox.</a>) När tillgget är avinstallerat eller deaktiverat kommer inga data skickas.</p><p><b>Har du frågor eller förslag? Kontakta oss på: <a href=\"mailto:politicalads@globeandmail.com\">politicalads@globeandmail.com</a>",
+    "description": "The terms of service"
+  },
+  "terms_of_service_accept": {
+    "message": "Jag accepterar",
+    "description": "The terms of service accept button"
+  },
+  "thanks1": {
+    "message": "Tack! 🙂",
+    "description": "a randomly-chosen Thanks! message"
+  },
+  "thanks2": {
+    "message": "Tack!",
+    "description": "a randomly-chosen Thanks! message"
+  },
+  "thanks3": {
+    "message": "Tack!",
+    "description": "a randomly-chosen Thanks! message"
+  },
+  "thanks4": {
+    "message": "Tack!",
+    "description": "a randomly-chosen Thanks! message"
+  },
+  "thanks5": {
+    "message": "Tack!",
+    "description": "a randomly-chosen Thanks! message",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  }
+}
