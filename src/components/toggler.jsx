@@ -35,9 +35,9 @@ const TogglerUnconnected = ({ ads, ratings, active, language }) => (
         message="see_ads"
         type={ToggleType.ADS}
       />
-      {(language && language.language === "en-US") || true ? (
+      {(language && (language.language === "en-US" || language.language === "en-CA")) || true ? (
         <Toggle
-          amount={4}
+          amount={1}
           active={active}
           message="stories"
           type={ToggleType.STORIES}
