@@ -1,6 +1,6 @@
 {
   "name": "fbpac-extension",
-  "version": "1.8.7",
+  "version": "1.8.8",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "ffdeDE": "web-ext run -s build --pref intl.locale.requested=de-DE --pref intl.locale.matchOS=false --pref intl.accept_languages=de-DE,de",
     "ffenCA": "web-ext run -s build --pref intl.locale.requested=en-CA --pref intl.locale.matchOS=false --pref intl.accept_languages=en-CA,en",
     "preversion": "rm -rf node_modules && npm install",
-    "version": "curr_version=$(grep -e '\"version\": \"[0-9][.][0-9][.][0-9]\"' package.json | sed -e 's/^  //g') && sed -Ei 's/\"version\":.+/'\"$curr_version\"'/g' manifest.json && git add manifest.json",
+    "version": "curr_version=$(grep -e '\"version\": \"[0-9][.][0-9][.][0-9]\"' package.json | sed -e 's/^  //g') && sed -e 's/\"version\".*/'\"$curr_version\"'/g' manifest.json > tmp.json && mv tmp.json manifest.json && git add manifest.json",
     "postversion": "npm run dist && git push origin master && git push --tags"
   },
   "author": "Tom Cardoso <tcardoso@globeandmail.com>",
