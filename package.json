@@ -13,7 +13,7 @@
     "ff": "web-ext run -s build",
     "ffdeDE": "web-ext run -s build --pref intl.locale.requested=de-DE --pref intl.locale.matchOS=false --pref intl.accept_languages=de-DE,de",
     "ffenCA": "web-ext run -s build --pref intl.locale.requested=en-CA --pref intl.locale.matchOS=false --pref intl.accept_languages=en-CA,en",
-    "version": "curr_version=$(git describe --tags --abbrev=0) && curr_version=\"$(echo $curr_version | sed 's/v//g')\" && sed -E 's/\"version: .+\n\"/\"version\": \"$curr_version\",\n/g' manifest.json > test.json"
+    "version": "curr_version=$(git describe --tags --abbrev=0) && curr_version=\"$(echo $curr_version | sed 's/v//g')\" && sed -E 's/\"version: .+\"/\"version\": \"$curr_version\",/g' manifest.json > test.json"
   },
   "author": "Tom Cardoso <tcardoso@globeandmail.com>",
   "contributors": [
