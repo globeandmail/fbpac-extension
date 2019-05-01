@@ -4,13 +4,17 @@ This is the repo for the [Facebook Political Ad Collector's](https://github.com/
 
 The extension popup is a [preact](https://preactjs.com/) application and you can build a development version by running the following:
 
-    $ cd extension
-    $ npm install
-    $ npm run watch
+```sh
+cd extension
+npm install
+npm run watch
+```
 
 If you are a Firefox user you can open a clean browser instance with:
 
-    $ npm run ff
+```sh
+npm run ff
+```
 
 and any changes will automatically refresh the extension. (You'll need webpack installed globally.)
 
