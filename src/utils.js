@@ -58,8 +58,8 @@ export const mergeAds = (ads, newAds) => {
 
 export const updateBadge = (ratings, stories_seen) => {
   if (!stories_seen || MOST_RECENT_STORIES_UPDATE > stories_seen) {
-    chrome.browserAction.setBadgeText({ text: "♥" });
-    chrome.browserAction.setBadgeBackgroundColor({ color: "#f00" });
+    chrome.browserAction.setBadgeText({ text: "!" });
+    chrome.browserAction.setBadgeBackgroundColor({ color: "#DA161F" });
   } else {
     const num = ratings.filter(rating => !("rating" in rating)).length;
     chrome.browserAction.setBadgeBackgroundColor({ color: "#0099E6" });
