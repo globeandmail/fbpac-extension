@@ -13,13 +13,15 @@
     "ff": "web-ext run -s build",
     "ffdeDE": "web-ext run -s build --pref intl.locale.requested=de-DE --pref intl.locale.matchOS=false --pref intl.accept_languages=de-DE,de",
     "ffenCA": "web-ext run -s build --pref intl.locale.requested=en-CA --pref intl.locale.matchOS=false --pref intl.accept_languages=en-CA,en",
-    "version": "curr_version=$(git describe --tags --abbrev=0) && curr_version=\"$(echo $curr_version | sed 's/v//g')\" && sed -E 's/\"version: .+\"/\"version\": \"$curr_version\",/g' manifest.json > test.json"
+    "preversion": "rm -rf node_modules && npm install",
+    "version": "curr_version=$(grep -e '\"version\": \"[0-9][.][0-9][.][0-9]\"' package.json | sed -e 's/^  //g') && sed -E 's/\"version\":.+/'\"$curr_version\"'/g' manifest.json && git add manifest.json",
+    "postversion": "npm run dist && git push origin master && git push --tags"
   },
   "author": "Tom Cardoso <tcardoso@globeandmail.com>",
   "contributors": [
-    "Jeff Larson <jeff.larson@propublica.org>",
+    "Tom Cardoso <tcardoso@globeandmail.com>",
     "Jeremy Merrill <Jeremy.Merrill@propublica.org>",
-    "Tom Cardoso <tcardoso@globeandmail.com>"
+    "Jeff Larson <jeff.larson@propublica.org>"
   ],
   "license": "ISC",
   "devDependencies": {
