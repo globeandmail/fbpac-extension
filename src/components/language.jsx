@@ -38,6 +38,7 @@ export const SelectLanguage = connect(
 export const SelectCountryUnconnected = ({ language, country, onChange }) => {
   const lang = countries.langs().includes(language) ? language : "en";
   const names = countries.getNames(lang);
+
   const keys = Object.keys(names);
 
   const createOption = alpha2 => (
@@ -54,17 +55,20 @@ export const SelectCountryUnconnected = ({ language, country, onChange }) => {
     </select>
   );
 };
+
 const selectCountryDispatchToProps = dispatch => ({
   onChange: e => {
     dispatch(setCountry(e.target.value));
   }
 });
+
 export const SelectCountry = connect(
   state => state.language,
   selectCountryDispatchToProps
 )(SelectCountryUnconnected);
 
 const browserLocale = getBrowserLocale();
+
 export const Language = withI18n(({ getMessage, language }) => (
   <div id="language">
     <h2>{getMessage("language_settings")}</h2>
