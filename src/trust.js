@@ -6,13 +6,14 @@
 var trust = `
 let onThePage;
 
-if(!onThePage) {
+if (!onThePage) {
 
-  let onThePage=1;
+  let onThePage = 1;
 
   let listeners = new WeakMap();
 
-  // We forge fn.toString() and fn.toString().toString() because those are two easy ways to identify that a built-in function has been replaced with extension JS
+  // We forge fn.toString() and fn.toString().toString() because those are two
+  // easy ways to identify that a built-in function has been replaced with extension JS
   var cloakToString = function (target, original) {
     target.toString = function toString () {
       return original.toString();
@@ -41,7 +42,7 @@ if(!onThePage) {
 
   // Filter all the primary mouse events that fb is likely to be using
   var snoopedEvents = [
-    // "mousedown", "mousemove", "mouseup",
+    // "mousedown", "mousemove", "mouseup", "mouseover",
     "click"
   ];
 
@@ -75,11 +76,12 @@ if(!onThePage) {
   filteredMouseEventProxyHandler.prototype.get = function (target, property, receiver) {
     try {
       // If we have an override for the property we return it here, otherwise...
-      if (this.customProperties.has(property))
-          return this.customProperties.get(property);
+      if (this.customProperties.has(property)) {
+        return this.customProperties.get(property);
+      }
       // We delegate to the original object.
-      if (target[property] && target[property].bind){
-          return target[property].bind(target)
+      if (target[property] && target[property].bind) {
+        return target[property].bind(target)
       }
       return target[property];
     } catch (exc) {
@@ -108,11 +110,11 @@ if(!onThePage) {
   var newDocumentAddEventListener = function (evtType, _listener, options) {
     var listener = _listener;
     // We wrap their event listeners in our custom one when necessary then
-    //  forward on to the built-in addEventListener.
+    // forward on to the built-in addEventListener.
     try {
-      if (snoopedEvents.indexOf(evtType) >= 0){
+      if (snoopedEvents.indexOf(evtType) >= 0) {
         listener = wrapMouseEventListener(evtType, _listener);
-        listeners[_listener] = listener
+        listeners[_listener] = listener;
       }
     } catch (exc) {
     }
@@ -125,9 +127,9 @@ if(!onThePage) {
   var newElementAddEventListener = function (evtType, _listener, options) {
     var listener = _listener;
     try {
-      if (snoopedEvents.indexOf(evtType) >= 0){
+      if (snoopedEvents.indexOf(evtType) >= 0) {
         listener = wrapMouseEventListener(evtType, _listener);
-        listeners[_listener] = listener
+        listeners[_listener] = listener;
       }
     } catch (exc) {
     }
