@@ -646,7 +646,12 @@ export const checkSponsor = node => {
   const nodes = node.querySelectorAll(
     ":scope [id^='feed_sub'], :scope [data-testid='story-subtitle'], :scope .ego_section a"
   );
-  return Array.from(nodes).some(postSubtitle => {
+
+  const nodeArr = Array.from(nodes);
+
+  if (!nodeArr.length) return false;
+
+  return nodeArr.some(postSubtitle => {
     // traverse the children,
     let visibleText = getVisibleText(postSubtitle);
     return sponsored_translations.some(sponsored_translation => {
