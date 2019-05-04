@@ -19,9 +19,8 @@ import {
   stories_seen
 } from "reducers.js";
 import { Dispatcher } from "./components/dispatcher.jsx";
-// styles
-import "../css/styles.css";
 import { ToggleType } from "./constants.js";
+import "./styles/main.scss";
 
 // The main reducer!
 const reducer = combineReducers({

@@ -13,8 +13,10 @@ export const Toggle = withI18n(
       className={"toggle" + (active === type ? " active" : "")}
       onClick={() => dispatch(toggle(type, active))}
     >
-      {getMessage(message)}
-      {amount ? <b>{100 > amount ? amount : "100+"}</b> : ""}
+      <p>
+        {getMessage(message)}
+        {amount ? <b>{100 > amount ? amount : "100+"}</b> : ""}
+      </p>
     </div>
   )
 );

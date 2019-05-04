@@ -2,6 +2,8 @@ const path = require("path");
 const webpack = require("webpack");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const autoprefixer = require("autoprefixer");
+
 const ENV = process.env.NODE_ENV || "development";
 
 const outdir =
@@ -74,6 +76,27 @@ module.exports = [
     devtool: "source-map"
   },
   {
+    entry: "hot-reload.js",
+    context: path.resolve(__dirname, "src"),
+    output: {
+      filename: "hot-reload.js",
+      path: outdir
+    },
+    resolve: {
+      modules: ["src", "node_modules"]
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          use: "babel-loader"
+        }
+      ]
+    },
+    devtool: "source-map"
+  },
+  {
     context: path.resolve(__dirname, "src"),
     entry: "popup.jsx",
     output: {
@@ -97,12 +120,24 @@ module.exports = [
           use: "babel-loader?cacheDirectory"
         },
         {
-          test: /\.css$/,
+          // look for .css or .scss files
+          test: /\.(css|scss)$/,
+          // in the `src` directory
+          include: [path.resolve(__dirname, "src")],
           use: [
             "style-loader",
             {
               loader: "css-loader",
-              options: { importLoaders: 1 }
+              options: {
+                importLoaders: 1,
+                sourceMap: process.env.NODE_ENV !== "production"
+              }
+            },
+            {
+              loader: "sass-loader",
+              options: {
+                sourceMap: process.env.NODE_ENV !== "production"
+              }
             }
           ]
         }

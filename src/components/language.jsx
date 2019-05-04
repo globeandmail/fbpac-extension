@@ -87,13 +87,12 @@ export const Language = withI18n(({ getMessage, language }) => (
     />
     <p>{getMessage("language_instructions")}</p>
     <p>
-      <label>
+      <label className="select-language">
         {getMessage("language")}
         <br />
         <SelectLanguage />
       </label>
-      <br />
-      <label>
+      <label className="select-country">
         {getMessage("country")}
         <br />
         <SelectCountry />

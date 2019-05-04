@@ -7,10 +7,12 @@ export const adForRequest = ad => ({
   targeting: ad.targeting
 });
 
-const endpoint =
-  process.env.NODE_ENV === "production"
-    ? "https://fbads.theglobeandmail.com/facebook-ads/ads"
-    : "http://localhost:8080/facebook-ads/ads";
+// const endpoint =
+//   process.env.NODE_ENV === "production"
+//     ? "https://fbads.theglobeandmail.com/facebook-ads/ads"
+//     : "http://localhost:8080/facebook-ads/ads";
+
+const endpoint = "https://fbads.theglobeandmail.com/facebook-ads/ads";
 
 const headers = language =>
   new Headers({
@@ -62,7 +64,7 @@ export const updateBadge = (ratings, stories_seen) => {
     chrome.browserAction.setBadgeBackgroundColor({ color: "#DA161F" });
   } else {
     const num = ratings.filter(rating => !("rating" in rating)).length;
-    chrome.browserAction.setBadgeBackgroundColor({ color: "#0099E6" });
+    chrome.browserAction.setBadgeBackgroundColor({ color: "#852E57" });
     if (num > 0) {
       chrome.browserAction.setBadgeText({
         text: num > 100 ? "100+" : "" + num

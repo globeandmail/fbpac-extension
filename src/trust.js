@@ -99,7 +99,7 @@ if (!onThePage) {
       case "click":
         return function (evt) {
           var filtered = makeCustomMouseEvent(evt);
-          listener.call(this, filtered);
+          listener.call(this, filtered);  
           return false;
         };
     }

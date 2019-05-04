@@ -18,7 +18,7 @@ export const Ad = ({ id, html }) => (
 export const RatingForm = withI18n(
   ({ getMessage, rating, action, question }) => (
     <div className="rater">
-      {getMessage(question)}
+      <p className="rater-question">{getMessage(question)}</p>
       <button
         id={"political" + rating.id}
         onClick={() => action(rating, RatingType.POLITICAL)}
@@ -37,7 +37,7 @@ export const RatingForm = withI18n(
 
 // Ads to be rated and sent to the server
 export const Rating = withI18n(({ getMessage, rating, action, question }) => (
-  <div className="rating">
+  <div className="ad-container">
     {"rating" in rating ? (
       <b className="political">{getMessage("political")}</b>
     ) : (

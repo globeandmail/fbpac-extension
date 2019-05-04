@@ -392,7 +392,13 @@ class IdFinder extends StateMachine {
   }
 
   close() {
-    refocus(() => this.toggle.click());
+    refocus(() => {
+      try {
+        this.toggle.click();
+      } catch (err) {
+        if (DEBUG) console.log(`Hello: ${err}`);
+      }
+    });
     this.promote(states.DONE);
   }
 
@@ -643,6 +649,8 @@ const getVisibleText = function(elem) {
 */
 
 export const checkSponsor = node => {
+  if (!node) return false;
+
   const nodes = node.querySelectorAll(
     ":scope [id^='feed_sub'], :scope [data-testid='story-subtitle'], :scope .ego_section a"
   );
