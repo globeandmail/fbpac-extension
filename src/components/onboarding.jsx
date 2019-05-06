@@ -10,6 +10,10 @@ export const Onboarding = withI18n(({ getMessage, onAcceptClick }) => (
         id="terms"
         dangerouslySetInnerHTML={{ __html: getMessage("terms_of_service") }}
       />
+      {/*
+        Crazy hack to deal with FF not displaying the Accept button
+        if it's tucked into the sidebar
+      */}
       <div id="accept-box-firefox">
         <button id="accept" onClick={onAcceptClick}>
           {getMessage("terms_of_service_accept")}
