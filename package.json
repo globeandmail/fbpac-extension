@@ -11,6 +11,7 @@
     "watch": "webpack -w --progress --mode development",
     "dist": "rm -rf dist/ && NODE_ENV=production webpack --progress --mode production && web-ext build -s dist",
     "ff": "web-ext run -s build",
+    "chrome": "./chrome-launch.js",
     "ffdeDE": "web-ext run -s build --pref intl.locale.requested=de-DE --pref intl.locale.matchOS=false --pref intl.accept_languages=de-DE,de",
     "ffenCA": "web-ext run -s build --pref intl.locale.requested=en-CA --pref intl.locale.matchOS=false --pref intl.accept_languages=en-CA,en",
     "chromeenUS": "./chrome-launch.js en-US,en",

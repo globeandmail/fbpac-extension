@@ -147,7 +147,8 @@ module.exports = [
       new webpack.optimize.ModuleConcatenationPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new HTMLWebpackPlugin({
-        title: "__MSG_extension_name__"
+        title: "__MSG_extension_name__",
+        meta: { viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no' }
       }),
       new webpack.DefinePlugin({
         "process.env.NODE_ENV": JSON.stringify(ENV)

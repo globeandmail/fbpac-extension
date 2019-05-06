@@ -6,8 +6,10 @@ const args = [
   "--load-extension=./build",
   "--temp-profile",
   "--password-store=basic",
-  `--lang="${process.argv[2]}"` // third item is the param, first two are node path and file path
 ];
+
+// third item is the param, first two are node path and file path
+if (process.argv[2]) args.push(`--lang="${process.argv[2]}"`);
 
 console.log(args);
 

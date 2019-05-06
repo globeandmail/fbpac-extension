@@ -10,6 +10,7 @@ $font-stack-bold: "GMSansCBold", Helvetica, sans-serif;
 
 body {
   width: 400px;
+  max-width: 100%;
   height: 600px;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
@@ -20,7 +21,7 @@ body {
   color: $color-text;
 }
 
-div {
+div, body {
   background-color: white;
 }
 
@@ -90,14 +91,29 @@ a:hover {
   border-bottom: 1px solid $color-link;
 }
 
+label {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+select, option {
+  font-size: 0.8rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+select {
+  padding: 2px;
+  padding-left: 0;
+}
+
 #popup {
   max-width: 100%;
-  height: 100%;
 }
 
 #thankscontainer {
   width: 100%;
-  height: 100%;
 }
 
 #thanksbar {
@@ -137,43 +153,37 @@ a:hover {
   min-height: 54px;
   font-family: $font-stack-regular;
   border-bottom: 0.2rem solid white;
-}
-
-.toggle p {
-  padding: 0 5px;
-  text-transform: uppercase;
-  position: relative;
-  top: 50%;
-  transform: perspective(1px) translateY(-50%);
-  text-align: center;
-  font-size: 0.9rem;
-  letter-spacing: 0.1em;
-  margin-top: 0.1rem;
+  p {
+    padding: 0 5px;
+    text-transform: uppercase;
+    position: relative;
+    top: 50%;
+    transform: perspective(1px) translateY(-50%);
+    text-align: center;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    margin-top: 0.1rem;
+  }
+  b {
+    // for the numerical badges
+    background-color: $color-primary;
+    color: white;
+    border-radius: 2px;
+    margin-left: 0.2rem;
+    display: inline-block;
+    font-size: 0.6rem;
+    padding: 2px 2px 2px 3px;
+    vertical-align: top;
+    margin-top: 1px;
+    min-width: 10px;
+  }
+  &.active, &:hover {
+    border-bottom: 0.2rem solid $color-primary;
+  }
 }
 
 [lang="de"] .toggle {
   font-size: 0.78rem;
-}
-
-.toggle:hover {
-  border-bottom: 0.2rem solid $color-primary;
-}
-
-.toggle.active {
-  border-bottom: 0.2rem solid $color-primary;
-}
-
-.toggle b {
-  background-color: $color-primary;
-  color: white;
-  border-radius: 2px;
-  margin-left: 0.2rem;
-  display: inline-block;
-  font-size: 0.6rem;
-  padding: 2px 2px 2px 3px;
-  vertical-align: top;
-  margin-top: 1px;
-  min-width: 10px;
 }
 
 .ad-container {
@@ -182,48 +192,48 @@ a:hover {
   border: 1px solid #efefef;
   transition: box-shadow 0.2s;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
-}
-
-.ad-container:hover {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
-}
-
-.ad-container input:focus {
-  outline: none;
-}
-
-.ad-container b.political {
-  color: #d0021b;
-  font-weight: bold;
-  display: block;
+  &:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+  }
+  input:focus {
+    outline: none;
+  }
+  b.political {
+    color: #d0021b;
+    font-weight: bold;
+    display: block;
+  }
 }
 
 .ad {
   font-size: 0.75rem;
   display: flow-root;
   transition: box-shadow 1s;
-}
-
-.ad p {
-  font-family: Helvetica, sans-serif;
-  font-size: 100%;
-}
-
-.ad a {
-  pointer-events: none;
-  color: $color-fb;
-  border: none;
-  font-family: Helvetica, sans-serif;
-  font-size: 100%;
+  a {
+    pointer-events: none;
+    color: $color-fb;
+    border: none;
+    font-family: Helvetica, sans-serif;
+    font-size: 100%;
+  }
+  p, strong {
+    font-family: Helvetica, sans-serif;
+    font-size: 100%;
+  }
+  strong {
+    font-weight: bold;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: Helvetica, sans-serif;
+  }
+  .advertiser {
+    font-weight: 500;
+  }
 }
 
 .ad-content a {
   pointer-events: none;
   cursor: default;
-}
-
-.ad .advertiser {
-  font-weight: 500;
 }
 
 a:focus {
@@ -235,7 +245,8 @@ a:focus {
   letter-spacing: 1px;
   font-family: $font-stack-regular;
   display: inline-block;
-  margin-right: 5px;
+  margin-right: 3px;
+  font-size: 1em;
 }
 
 .rater,
@@ -259,42 +270,25 @@ b.political {
 }
 
 .rater button {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   border: 1px solid $color-primary;
   color: $color-primary;
   background-color: white;
   font-family: $font-stack-regular;
+  padding: 0.25rem 0.25rem 0.2rem 0.25rem;
+  line-height: 1;
   &:hover {
     color: white;
     background-color: $color-primary;
   }
-}
-
-label {
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 1px;
-}
-
-select, option {
-  font-size: 0.8rem;
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-select {
-  padding: 2px;
-  padding-left: 0;
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .select-language, .select-country {
   display: block;
   margin-bottom: 0.5rem;
-}
-
-#tos button {
-  margin-left: auto;
-  margin-right: auto;
 }
 
 #tos button:hover,
@@ -304,77 +298,85 @@ select {
   color: rgba(255, 255, 255, 0.75);
 }
 
-#tos button {
-  color: white;
-  border-color: $color-primary;
-  background-color: $color-primary;
-  margin: 0.4rem auto;
-  display: block;
-}
-
 .rater button:focus,
 #language select {
   outline: none;
 }
 
 #tos {
-  width: 100%;
-  height: 100%;
   box-sizing: border-box;
-}
-
-#tos {
-  display: grid;
-  grid-template-areas:
-    "main"
-    "footer";
-}
-
-#tos #main {
-  padding: 0 10px;
-  grid-area: main;
-}
-
-#tos #main #accept-box { /* disgusting ugly hack for making sure the accept button is visible for people with tiny viewports */
-  grid-area: unset;
-}
-
-#tos #accept-box {
-  grid-area: footer;
-  border-top: 1px solid #dedede;
-}
-
-#tos .tos-bottom {
-  margin: 0.7rem 0;
-  font-size: 0.8rem;
-}
-
-#tos h2 {
-  font-size: 1.1rem;
-  line-height: 1;
-  margin: 0;
-  padding: 0;
-  margin-bottom: 0.3rem;
-  margin-top: 0.7rem;
-}
-
-#tos p b {
-  background-color: lighten($color-primary, 55%);
-  padding: 3px 4px;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  background-color: white;
+  #main {
+    padding: 0 10px;
+  }
+  #accept-box {
+    border-top: 1px solid #dedede;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+  #accept-box-firefox {
+    display: none;
+    @supports (-moz-appearance:none) {
+      display: block;
+      position: static;
+      width: 100%;
+      margin-bottom: 65px;
+      @media (max-height: 600px) {
+        display: none;
+      }
+    }
+  }
+  button {
+    color: white;
+    border-color: $color-primary;
+    background-color: $color-primary;
+    margin: 0.4rem auto;
+    display: block;
+  }
+  #terms p {
+    &:nth-last-of-type(1) {
+      margin: 0.7rem 0;
+      font-size: 0.8rem;
+      b {
+        background: none;
+      }
+    }
+    &:last-of-type {
+      margin-bottom: 3.5rem;
+      // hacks to account for FF width when extension is
+      // tucked into toolbar at small viewport sizes
+      @supports (-moz-appearance:none) {
+        @media (min-height: 601px) {
+          margin-bottom: 0.7rem;
+        }
+      }
+    }
+  }
+  h2 {
+    font-size: 1.1rem;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 0.3rem;
+    margin-top: 0.7rem;
+  }
+  p b {
+    background-color: lighten($color-primary, 55%);
+    padding: 3px 4px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
 }
 
 #language {
   margin-bottom: 1.5rem;
-}
-
-#language select {
-  width: 100%;
-}
-
-#language .button {
-  border-width: 1px;
+  select {
+    width: 100%;
+  }
+  .button {
+    border-width: 1px;
+  }
 }
 
 #stories {
@@ -382,26 +384,23 @@ select {
   margin-left: auto;
   margin-right: auto;
   border: none;
-}
-
-#stories ul {
-  font-size: 1rem;
-  list-style-type: none;
-  list-style-position: outside;
-  font-weight: 700;
-  margin: 1rem auto;
-}
-
-#stories ul li {
-  background-color: lighten($color-primary, 55%);
-  margin: 10px 0px;
-  border-radius: 2px;
-  padding: 8px 12px 12px 12px;
-}
-
-#stories ul li p {
-  margin: 0;
-  line-height: 1.4;
+  ul {
+    font-size: 1rem;
+    list-style-type: none;
+    list-style-position: outside;
+    font-weight: 700;
+    margin: 1rem auto;
+  }
+  ul li {
+    background-color: lighten($color-primary, 55%);
+    margin: 10px 0px;
+    border-radius: 2px;
+    padding: 8px 12px 12px 12px;
+  }
+  ul li p {
+    margin: 0;
+    line-height: 1.4;
+  }
 }
 
 @import "ads.module";

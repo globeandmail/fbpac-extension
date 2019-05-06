@@ -7,12 +7,10 @@ export const adForRequest = ad => ({
   targeting: ad.targeting
 });
 
-// const endpoint =
-//   process.env.NODE_ENV === "production"
-//     ? "https://fbads.theglobeandmail.com/facebook-ads/ads"
-//     : "http://localhost:8080/facebook-ads/ads";
-
-const endpoint = "https://fbads.theglobeandmail.com/facebook-ads/ads";
+const endpoint =
+  process.env.NODE_ENV === "production"
+    ? "https://fbads.theglobeandmail.com/facebook-ads/ads"
+    : "http://localhost:8080/facebook-ads/ads";
 
 const headers = language =>
   new Headers({
