@@ -1,3 +1,4 @@
+import { sponsoredTranslations } from "sponsored.js";
 export const TIMELINE_SELECTOR = ".userContentWrapper";
 export const SIDEBAR_SELECTOR = ".ego_unit";
 export const DEBUG =
@@ -172,7 +173,7 @@ export class Parser extends StateMachine {
     while (parent) {
       // because of the addition of `:scope`, we want to stop BEFORE moving
       // one level up for the parent element variable
-      if (checkSponsor(parent.parentElement)) break;
+      if (checkSponsor(parent.parentElement, this.node)) break;
       parent = parent.parentElement;
     }
 
@@ -184,12 +185,11 @@ export class Parser extends StateMachine {
     }
 
     // Sanity check to make sure we have a salvageable id
-    if (!this.node.hasAttribute("data-ego-fbid")) {
-      return this.notAnAd();
-    }
+    if (!this.node.hasAttribute("data-ego-fbid")) return this.notAnAd();
 
     // and we have childnodes
     if (!this.node.children.length === 0) return this.notAnAd();
+
     if (DEBUG) parent.style.backgroundColor = "#f442c8";
 
     // if we're seeing ads with just a spacer image and a background as the
@@ -392,13 +392,7 @@ class IdFinder extends StateMachine {
   }
 
   close() {
-    refocus(() => {
-      try {
-        this.toggle.click();
-      } catch (err) {
-        if (DEBUG) console.log(`Hello: ${err}`);
-      }
-    });
+    refocus(() => this.toggle.click());
     this.promote(states.DONE);
   }
 
@@ -560,7 +554,7 @@ const cleanAd = html => {
 };
 
 /*
-  Facebook's "Sponsored" markup is actually "SpSonSsoSredSSS".
+  Facebook's "Sponsored" markup is actually sometimes "SpSonSsoSredSSS".
   All the extra "S" are hidden with CSS. In other languages, that intrusive letter is not "S",
   but rather the first letter of the word for "Sponsored", e.g. "C" for fr-CA's "Commandité".
   The intrusive letters and the real letters are all in spans. Both have two classes, but those
@@ -578,26 +572,11 @@ const cleanAd = html => {
   efforts is something you want to be doing. Let's chat - coffee on me. Signal or call me at 416-585-5752, or PGP at tcardoso AT globeandmail DOT com
 */
 
-const sponsored_translations = [
-  "Gesponsord",
-  "Sponsored", // en-US
-  "Gesponsert",
-  "Sponsrad", // sv
-  "Sponsorlu", // turkish?
-  "Sponsoroitu", // fn?
-  "مُموَّل", // ar
-  "Sponsoreret", // dk
-  "Sponsorizzata", //it
-  "Chartered", // en-PIRATE :)
-  "Commandité", // fr-CA
-  "Sponsorisé", // fr-FR
-  "Patrocinado", // pt-BR
-  "Apmaksāta", // lv-LV (cuts off reklāma as part of the thing that gets rid of the U.S. disclaimer)
-  "რეკლამა", // ka-GE
-  "Реклама", // ru
-  "Publicidad", // es
-  "ממומן" //he
-];
+const fbLocale = Array.from(document.body.classList)
+  .filter(d => d.indexOf("Locale") > -1)[0]
+  .replace("Locale_", "");
+
+const sponsoredTranslation = sponsoredTranslations[fbLocale] || sponsoredTranslations["en_US"];
 
 const elemIsVisible = elem => {
   return (
@@ -609,6 +588,7 @@ const elemIsVisible = elem => {
 };
 
 const checkIfContains = function(sponsoredWord, toCheck) {
+  // this is triggering some false positives
   let checkStr = toCheck.toLowerCase();
   return sponsoredWord
     .toLowerCase()
@@ -648,7 +628,7 @@ const getVisibleText = function(elem) {
   - Tom Cardoso, April 2, 2019
 */
 
-export const checkSponsor = node => {
+export const checkSponsor = (node, originalNode) => {
   if (!node) return false;
 
   const nodes = node.querySelectorAll(
@@ -659,12 +639,22 @@ export const checkSponsor = node => {
 
   if (!nodeArr.length) return false;
 
+  // if we have a source `this.node` for comparison, such as
+  // in sidebars, we'll use it to compare against the new text
+  const originalNodeText = originalNode ? getVisibleText(originalNode) : false;
+
+  // traverse the children
   return nodeArr.some(postSubtitle => {
-    // traverse the children,
+
     let visibleText = getVisibleText(postSubtitle);
-    return sponsored_translations.some(sponsored_translation => {
-      return checkIfContains(sponsored_translation, visibleText);
-    });
+
+    // To make sure we're only checking for the text of the current node
+    // (as opposed to ALL the text of the parent container) we
+    // do a quick replace here.
+    if (originalNodeText) visibleText = visibleText.replace(originalNodeText, "");
+
+    return checkIfContains(sponsoredTranslation, visibleText);
+
   });
 };
 

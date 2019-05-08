@@ -18,7 +18,8 @@
     "chromeenCA": "./chrome-launch.js en-CA,en",
     "preversion": "rm -rf node_modules && npm install",
     "version": "curr_version=$(grep -e '\"version\": \"[0-9]\\+[.][0-9]\\+[.][0-9]\\+\"' package.json | sed -e 's/^  //g') && sed -e 's/\"version\".*/'\"$curr_version\"'/g' manifest.json > tmp.json && mv tmp.json manifest.json && git add manifest.json",
-    "postversion": "npm run dist && git push origin master && git push --tags"
+    "postversion": "npm run dist && git push origin master && git push --tags",
+    "release": "rm -rf node_modules && npm install && rm -rf dist/ && NODE_ENV=production webpack --progress --mode production && web-ext build --overwrite-dest -s dist"
   },
   "author": "Tom Cardoso <tcardoso@globeandmail.com>",
   "contributors": [

@@ -3,6 +3,9 @@
 // After all, collecting ad info is what our users installed the extension to do...
 // and they control their data.
 
+export const DEBUG =
+  process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "development";
+
 var trust = `
 let onThePage;
 
@@ -86,7 +89,7 @@ if (!onThePage) {
       return target[property];
     } catch (exc) {
       // Don't propagate errors out into third party code.
-      // console.error("error in get", property, exc);
+      if (${DEBUG}) console.error("error in get", property, exc);
     }
     return target[property];
   };
@@ -99,7 +102,11 @@ if (!onThePage) {
       case "click":
         return function (evt) {
           var filtered = makeCustomMouseEvent(evt);
-          listener.call(this, filtered);  
+          try {
+            listener.call(this, filtered);
+          } catch (exc) {
+            if (${DEBUG}) console.error("error in wrap", filtered, exc);
+          }
           return false;
         };
     }
@@ -109,6 +116,7 @@ if (!onThePage) {
 
   var newDocumentAddEventListener = function (evtType, _listener, options) {
     var listener = _listener;
+    if (options) options["passive"] = false;
     // We wrap their event listeners in our custom one when necessary then
     // forward on to the built-in addEventListener.
     try {
@@ -117,6 +125,7 @@ if (!onThePage) {
         listeners[_listener] = listener;
       }
     } catch (exc) {
+      if (${DEBUG}) console.error("error in newDocumentAddEventListener", listener, exc);
     }
 
     var result = document_addEventListener.call(this, evtType, listener, options);
@@ -126,12 +135,14 @@ if (!onThePage) {
 
   var newElementAddEventListener = function (evtType, _listener, options) {
     var listener = _listener;
+    if (options) options["passive"] = false;
     try {
       if (snoopedEvents.indexOf(evtType) >= 0) {
         listener = wrapMouseEventListener(evtType, _listener);
         listeners[_listener] = listener;
       }
     } catch (exc) {
+      if (${DEBUG}) console.error("error in newElementAddEventListener", listener, exc);
     }
 
     var result = element_addEventListener.call(this, evtType, listener, options);
