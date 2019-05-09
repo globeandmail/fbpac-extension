@@ -199,9 +199,11 @@ select {
     outline: none;
   }
   b.political {
-    color: #d0021b;
+    color: $color-primary;
     font-weight: bold;
     display: block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 }
 
