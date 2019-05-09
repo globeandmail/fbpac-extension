@@ -16,8 +16,12 @@ If you are a Firefox user you can open a clean browser instance with:
 npm run ff
 ```
 
-and any changes will automatically refresh the extension. (You'll need webpack installed globally.)
+and for Chrome, you can run:
 
-In Chrome you can add an unpacked extension by following these [directions](https://developer.chrome.com/extensions/getstarted).
+```sh
+npm run chrome
+```
+
+and any changes will automatically refresh the extension.
 
 The development version submits ads to the development version of the backend, which is presumed to be running at [localhost:8080](localhost:8080).

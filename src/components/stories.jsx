@@ -3,9 +3,9 @@ import React from "react";
 export const Stories = () => (
   <div id="stories">
     <div className="precis">
-      <h4>Thank you for still participating in The Globe and Mail&rsquo;s Facebook Political Ad Collector project!</h4>
-      <p>As you may have heard, Facebook modified their website&rsquo;s code in a way that temporarily interfered with the ad collector. Evidently, they don&rsquo;t think the database that we&rsquo;ve built together should exist.</p>
-      <p>But, we&rsquo;re back up and running: collecting ads and the targeting explanations. Thanks for bearing with us. Here&rsquo;s some more info on that, and some more of what we found.</p>
+      <h4>Thank you for still participating in the Facebook Political Ad Collector project!</h4>
+      <p>The Globe and Mail, a national newspaper in Canada and partner on the ad collector, has taken over stewardship of the project which was previously maintained by ProPublica. We&rsquo;ve updated and improved the extension, and fixed it in cases where Facebook modified their website&rsquo;s code in an effort to block the ad collector. ProPublica and all other publication partners will continue to have access to the ads submitted through this extension, the privacy rules around the project and extension have not changed, and, same as ProPublica, we will never collect your personal information during this project.</p>
+      <p>Thank you again for your continued support. To learn more about the extension and The Globe&rsquo;s commitment to the project, check out the stories below.</p>
     </div>
     <ul>
       <li>
