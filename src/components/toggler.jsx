@@ -14,7 +14,7 @@ export const Toggle = withI18n(
       onClick={() => dispatch(toggle(type, active))}
     >
       <p>
-        {getMessage(message)}
+        {getMessage(message) || 'Stories'}
         {amount ? <b>{100 > amount ? amount : "100+"}</b> : ""}
       </p>
     </div>
@@ -37,14 +37,12 @@ const TogglerUnconnected = ({ ads, ratings, active, language }) => (
         message="see_ads"
         type={ToggleType.ADS}
       />
-      {(language && (language.language === "en-US" || language.language === "en-CA")) || true ? (
-        <Toggle
-          amount={1}
-          active={active}
-          message="stories"
-          type={ToggleType.STORIES}
-        />
-      ) : null}
+      <Toggle
+        amount={1}
+        active={active}
+        message="stories"
+        type={ToggleType.STORIES}
+      />
     </div>
     <div id="container">
       {active === ToggleType.ADS ? (
