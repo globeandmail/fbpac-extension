@@ -631,9 +631,12 @@ const getVisibleText = function(elem) {
 export const checkSponsor = (node, originalNode) => {
   if (!node) return false;
 
-  const nodes = node.querySelectorAll(
-    ":scope [id^='feed_sub'], :scope [data-testid='story-subtitle'], :scope .ego_section a"
-  );
+  const nodes = node.querySelectorAll([
+      ":scope [id^='feed_sub']",
+      ":scope [data-testid='story-subtitle']",
+      ":scope [data-testid='story-subtilte']",
+      ":scope .ego_section a"
+    ].join(", "));
 
   const nodeArr = Array.from(nodes);
 
