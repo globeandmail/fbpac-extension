@@ -30,4 +30,4 @@ chrome.runtime.onMessage.addListener(ads => {
   }
 });
 
-chrome.browserAction.setBadgeBackgroundColor({ color: "#0099E6" });
+chrome.browserAction.setBadgeBackgroundColor({ color: "#852E57" });

@@ -632,6 +632,7 @@ export const checkSponsor = (node, originalNode) => {
   if (!node) return false;
 
   const nodes = node.querySelectorAll([
+      ":scope .clearfix a",
       ":scope [id^='feed_sub']",
       ":scope [data-testid='story-subtitle']",
       ":scope [data-testid='story-subtilte']",
@@ -648,6 +649,8 @@ export const checkSponsor = (node, originalNode) => {
 
   // traverse the children
   return nodeArr.some(postSubtitle => {
+
+    if (!postSubtitle.textContent) return;
 
     let visibleText = getVisibleText(postSubtitle);
 
