@@ -123,6 +123,10 @@ select {
   width: 100%;
   text-align: center;
   border-top: 2px solid #ccc;
+  font-family: $font-stack-bold;
+  text-transform: uppercase;
+  padding: 0.2em 0;
+  letter-spacing: 1px;
 }
 
 #thanksbar:not(:empty) + #toggler {
