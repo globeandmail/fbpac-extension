@@ -1,6 +1,6 @@
 # fbpac-extension
 
-This is the repo for the [Facebook Political Ad Collector](https://github.com/globeandmail/facebook-political-ads/) extension. To run the entire FBPAC setup, you'll also need to run [fbpac-backend](https://github.com/globeandmail/fbpac-backend) and [fbpac-api](https://github.com/globeandmail/fbpac-api), plus [fbpac-classifier](https://github.com/globeandmail/fbpac-classifier) if you're deploying a production version and want to classify your own ads.
+This is the classifier for the [Facebook Political Ad Collector](https://github.com/globeandmail/facebook-political-ads/). For a full breakdown of the other services you'll need to deploy the app, see the [README for our main repo](https://github.com/globeandmail/facebook-political-ads/blob/master/README.md).
 
 ### Installation
 
