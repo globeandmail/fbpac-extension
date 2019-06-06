@@ -14,13 +14,13 @@
 
   ._4uoz {
     /* Targeting info */
-    color: lightne(#333, 45%); /* $text-color-low-contrast; */
+    color: lighten(#333, 45%); /* $text-color-low-contrast; */
     max-width: 500px;
     padding: 0 12px;
     margin: 12px auto 24px auto;
   }
   ._4uoz a {
-    display: none;
+    // display: none;
   }
   ._4uoz b {
     color: #333; /* $text-color; */
