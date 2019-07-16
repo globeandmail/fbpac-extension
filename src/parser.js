@@ -478,6 +478,11 @@ const selectors = [
   "h5._1qbu",
   ".commentable_item"
 ].join(", ");
+const utmKeys = ["utm_source",
+"utm_medium",
+"utm_campaign",
+"utm_term",
+"utm_content"]
 
 const backgroundImagesToImg = node => {
   const nodes = node.querySelectorAll(":scope img");
@@ -520,7 +525,23 @@ const cleanAd = html => {
           if (url.host === "l.facebook.com")
             url = new URL(new URLSearchParams(url.search).get("u"));
           if (url.origin && url.pathname) {
-            node.setAttribute(attr.name, url.origin + url.pathname);
+
+            // if present, preserves only UTM params from search string.
+            let searchStr = '';
+            if(url.search && url.search.length > 0){
+              let unsafeParams = new URLSearchParams(url.search)
+              let utmParams = new URLSearchParams();
+              utmKeys.forEach((key) => {
+                if (unsafeParams.get(key)){
+                  utmParams.set(key, unsafeParams.get(key));
+                }
+              })
+              if(utmParams.toString().length > 0){
+                searchStr = "?" + utmParams.toString();
+              }
+            }
+
+            node.setAttribute(attr.name, url.origin + url.pathname + searchStr);
           } else {
             node.removeAttribute(attr.name);
           }
