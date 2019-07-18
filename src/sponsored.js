@@ -62,7 +62,7 @@ export const sponsoredTranslations = {
   "ig_NG": "",
   "ik_US": "",
   "is_IS": "Kostað",
-  "it_IT": "Sponsorizzata",
+  "it_IT": "Sponsorizzato",
   "iu_CA": "",
   "ja_JP": "広告",
   "ja_KS": "広告",
