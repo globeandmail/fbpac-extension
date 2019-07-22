@@ -51,8 +51,7 @@ if (!onThePage) {
 
   // Take the original mouse event, create a proxy handler, then wrap it in a proxy.
   function makeCustomMouseEvent (originalEvent) {
-    if (originalEvent.target.getAttribute("aria-label") == "Story options" &&
-      originalEvent.target.getAttribute("data-testid") == "post_chevron_button" &&
+    if (originalEvent.target.getAttribute("data-testid") == "post_chevron_button" &&
       originalEvent.target.getAttribute("aria-haspopup") == "true" &&
       originalEvent.target.getAttribute("rel") == "toggle"
     ) {
