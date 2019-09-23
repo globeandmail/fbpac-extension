@@ -594,17 +594,25 @@ const cleanAd = html => {
 */
 
 const fbLocale = Array.from(document.body.classList)
-  .filter(d => d.indexOf("Locale") > -1)[0]
-  .replace("Locale_", "");
+  .filter(d => d.indexOf("Locale") > -1)[0];
 
-const sponsoredTranslation = sponsoredTranslations[fbLocale] || sponsoredTranslations["en_US"];
+const parsedFbLocale = fbLocale ? fbLocale.replace("Locale_", "") : "en_US";
+
+const sponsoredTranslation = sponsoredTranslations[parsedFbLocale] || sponsoredTranslations["en_US"];
 
 const elemIsVisible = elem => {
+  const rect = elem.getBoundingClientRect();
+  const st = window.getComputedStyle(elem);
   return (
     elem &&
     elem.offsetHeight > 0 &&
     elem.offsetWidth > 0 &&
-    window.getComputedStyle(elem).getPropertyValue("opacity") !== "0"
+    rect &&
+    rect.height > 0 &&
+    rect.width > 0 &&
+    st &&
+    st.display && st.display !== "none" &&
+    st.opacity && st.opacity !== "0"
   );
 };
 
@@ -671,9 +679,27 @@ export const checkSponsor = (node, originalNode) => {
   // traverse the children
   return nodeArr.some(postSubtitle => {
 
-    if (!postSubtitle.textContent) return;
+    // Lately, Facebook seems to have changed approaches to occasionally
+    // storing the string elements in a bunch of empty spans with a
+    // data-content attribute that stores the actual letter for the string.
+    // The Sponsored string is then apparently constructed using either JS
+    // or CSS ::after pseudo-styles, so we need to account for those below.
+    const dataContentSpans = Array.from(postSubtitle.querySelectorAll(":scope span[data-content]"));
 
-    let visibleText = getVisibleText(postSubtitle);
+    // if textContent is empty and no data-content spans, exit the function
+    if (!postSubtitle.textContent && dataContentSpans.length === 0) return;
+
+    let visibleText;
+
+    // If there are data-content spans, need to account for that here
+    if (dataContentSpans.length) {
+      const visibleSpanStrs = dataContentSpans
+        .filter(spanElem => elemIsVisible(spanElem))
+        .map(spanElem => spanElem.getAttribute("data-content"));
+      visibleText = visibleSpanStrs.join("");
+    } else {
+      visibleText = getVisibleText(postSubtitle);
+    }
 
     // To make sure we're only checking for the text of the current node
     // (as opposed to ALL the text of the parent container) we
