@@ -312,17 +312,28 @@ export class Parser extends StateMachine {
     req.onreadystatechange = () => {
       if (req.readyState === 4) {
         try {
-          const targeting = cleanAd(
-            JSON.parse(req.response.replace("for (;;);", ""))["jsmods"][
-              "markup"
-            ][0][1]["__html"]
-          );
+          let targeting = null;
+          try{
+            targeting = cleanAd(JSON.parse(req.response.replace("for (;;);", ""))["jsmods"]["markup"][0][1]["__html"]);
+            if(targeting === null){ // sometimes the old-style targeting string still exists but is blank :shrug:
+              throw TypeError;
+            }
+          }catch(TypeError){
+            console.log(JSON.parse(req.response.replace("for (;;);", "")))
+            let targeting_json = JSON.parse(req.response.replace("for (;;);", ""))["jsmods"]["pre_display_requires"][0][3][1].__bbox.result.data.waist_targeting_data;
+            for(let obj of targeting_json){
+              delete obj["birthday"];
+            }
+            console.log("targeting json", targeting_json);
+            targeting = JSON.stringify(targeting_json);
+          }
           if (!targeting) return this.promote(states.DONE);
           targetingCache.set(this.targetingUrl, targeting);
           this.ad.targeting = targeting;
+          console.log("this.ad", this.ad);
           this.promote(states.DONE);
         } catch (e) {
-          if (DEBUG) console.log("error getting targeting", e);
+          if (DEBUG) console.log("error getting targeting", e, req.response.errorSummary);
           targetingBlocked = true;
           setTimeout(() => (targetingBlocked = false), 15 * 16 * 1000);
           this.promote(states.DONE);
@@ -331,6 +342,7 @@ export class Parser extends StateMachine {
     };
     this.promote(states.WAIT_TARGETING);
     req.open("GET", "https://www.facebook.com" + built, true);
+    console.log("built", built.length)
     req.send();
   }
 
@@ -457,7 +469,7 @@ export class SidebarFinder extends IdFinder {
   }
 
   filter(it) {
-    return it.getAttribute("data-label").indexOf("Why am I seeing this") > -1;
+    return it.getAttribute("data-label") && it.getAttribute("data-label").indexOf("Why am I seeing this") > -1;
   }
 }
 
@@ -571,7 +583,7 @@ const cleanAd = html => {
     Array.from(node.children).forEach(killAttrs);
   };
   Array.from(node.children).forEach(killAttrs);
-  return node.innerHTML.replace(/&amp;/g, "&");
+  return node.textContent == '' ? null : node.innerHTML.replace(/&amp;/g, "&");
 };
 
 /*
