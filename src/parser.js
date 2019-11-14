@@ -320,8 +320,8 @@ export class Parser extends StateMachine {
             }
           }catch(TypeError){
             console.log(JSON.parse(req.response.replace("for (;;);", "")))
-            let targeting_json = JSON.parse(req.response.replace("for (;;);", ""))["jsmods"]["pre_display_requires"][0][3][1].__bbox.result.data.waist_targeting_data;
-            for(let obj of targeting_json){
+            let targeting_json = JSON.parse(req.response.replace("for (;;);", ""))["jsmods"]["pre_display_requires"][0][3][1].__bbox.result.data;
+            for(let obj of targeting_json.waist_targeting_data){
               delete obj["birthday"];
             }
             console.log("targeting json", targeting_json);

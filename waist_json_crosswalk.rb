@@ -38,8 +38,16 @@ GENDER_CROSSWALK = {
 CSV.open("json_targetings.csv", headers: true).each do |row|
 	targ_json = row["targeting"]
 	advertiser = row["advertiser"]
-	next unless targ_json[0] == "["
-	targeting = JSON.parse(targ_json)
+	next unless targ_json[0] == "[" || targ_json[0..22] == "{\"waist_targeting_data\""
+	data = JSON.parse(targ_json)
+	if data.is_a?(Hash) && data.has_key?("waist_targeting_data")
+		targeting = data["waist_targeting_data"] # this is necessary for all post Nov 13 data.
+	else 
+		targeting = data
+	end
+	if advertiser.nil? && data.is_a?(Hash) && data.has_key?("waist_advertiser_info")
+		advertiser = data["waist_advertiser_info"]["name"]
+	end
 	targets = targeting.map do |elem|
 		# puts Base64.decode64(elem["id"])
 		case elem["__typename"]
@@ -93,7 +101,7 @@ CSV.open("json_targetings.csv", headers: true).each do |row|
 			elem["locales"].map{|l| ["Language", l]}
 		when "WAISTUIInterestsType"
 			elem["interests"].map{|i| ["Interest", i["name"]]}
-		when "WAISTUIBCTType"
+		when "WAISTUIBCTType" # thus far, likely engagement with conservative content
 			[["Segment", elem["name"]]]
 		when "WAISTUIEduStatusType"
 			[["Education", elem["edu_status"]], ["Segment", elem["edu_status"] == "EDU_COLLEGE_ALUMNUS" ? "Bachelor's degree" :  elem["edu_status"] ]]
