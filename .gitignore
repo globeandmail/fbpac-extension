@@ -16,3 +16,4 @@ web-ext-artifacts/*
 !dist/.gitkeep
 !build/.gitkeep
 !web-ext-artifacts/.gitkeep
+waist_json_crosswalk.rb
