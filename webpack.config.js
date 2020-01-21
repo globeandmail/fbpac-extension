@@ -13,7 +13,7 @@ const outdir =
 
 module.exports = [
   {
-    entry: "content.js",
+    entry: ['babel-polyfill', "content.js"],
     context: path.resolve(__dirname, "src"),
     output: {
       filename: "content.js",
