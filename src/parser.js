@@ -874,40 +874,51 @@ const getVisibleText = function(elem) {
   - Tom Cardoso, April 2, 2019
 */
 
+const hasAncestorWithClass = function(currentElement, topLevelElement, searchClass) {
+  let parent = currentElement.parentElement,
+    resolution = false;
+  while (!resolution) {
+    if (parent === topLevelElement) break;
+    if (parent.classList.contains(searchClass)) {
+      resolution = true;
+    } else {
+      parent = parent.parentElement;  
+    }
+  }
+  return resolution;
+};
+
+
 export const checkSponsor = (node, originalNode) => {
   if (!node) return false;
-
   const nodes = node.querySelectorAll([
-      ":scope .clearfix a",
+      ":scope .clearfix a[href^='/']",
       ":scope [id^='feed_sub']",
       ":scope [data-testid='story-subtitle']",
       ":scope [data-testid='story-subtilte']",
       ":scope .ego_section a"
-    ].join(", "));
-
-  const nodeArr = Array.from(nodes);
-
+    ]
+    .join(", "));
+  let nodeArr = Array.from(nodes);
+  if (!originalNode) {
+    // if matched node's ancestor has a class of .userContent, toss it
+    nodeArr = nodeArr.filter(n => !hasAncestorWithClass(n, node, 'userContent'))
+  }
   if (!nodeArr.length) return false;
-
   // if we have a source `this.node` for comparison, such as
   // in sidebars, we'll use it to compare against the new text
   const originalNodeText = originalNode ? getVisibleText(originalNode) : false;
-
   // traverse the children
   return nodeArr.some(postSubtitle => {
-
     // Lately, Facebook seems to have changed approaches to occasionally
     // storing the string elements in a bunch of empty spans with a
     // data-content attribute that stores the actual letter for the string.
     // The Sponsored string is then apparently constructed using either JS
     // or CSS ::after pseudo-styles, so we need to account for those below.
     const dataContentSpans = Array.from(postSubtitle.querySelectorAll(":scope span[data-content]"));
-
     // if textContent is empty and no data-content spans, exit the function
     if (!postSubtitle.textContent && dataContentSpans.length === 0) return;
-
     let visibleText;
-
     // If there are data-content spans, need to account for that here
     if (dataContentSpans.length) {
       const visibleSpanStrs = dataContentSpans
@@ -917,14 +928,12 @@ export const checkSponsor = (node, originalNode) => {
     } else {
       visibleText = getVisibleText(postSubtitle);
     }
-
     // To make sure we're only checking for the text of the current node
     // (as opposed to ALL the text of the parent container) we
     // do a quick replace here.
     if (originalNodeText) visibleText = visibleText.replace(originalNodeText, "");
-
+    if (visibleText.length < sponsoredTranslation.length) return false;
     return checkIfContains(sponsoredTranslation, visibleText);
-
   });
 };
 
