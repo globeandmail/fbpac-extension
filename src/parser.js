@@ -893,6 +893,8 @@ export const checkSponsor = (node, originalNode) => {
   if (!node) return false;
   const nodes = node.querySelectorAll([
       ":scope .clearfix a[href^='/']",
+      ":scope .clearfix a[href^='#']",
+      ":scope .clearfix a[role^='button']",
       ":scope [id^='feed_sub']",
       ":scope [data-testid='story-subtitle']",
       ":scope [data-testid='story-subtilte']",
