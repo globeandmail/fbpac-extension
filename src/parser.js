@@ -13,6 +13,205 @@ const ad = node => ({
   html: cleanAd(node.outerHTML),
   created_at: new Date().toString()
 });
+const documentRoot = () => document.head || document.documentElement;
+const makeScript = (key, fn, args) =>
+  `localStorage.setItem('${key}', (${fn}).apply(this, ${JSON.stringify(
+    args
+  )}));`;
+
+const grabVariableAti = (fn, args) => {
+  const PAGE_VARIABLE_KEY = 'pageVariable';
+  const script = document.createElement('script');
+  script.textContent = makeScript(PAGE_VARIABLE_KEY, fn, args);
+  script.setAttribute('id', PAGE_VARIABLE_KEY);
+  documentRoot().appendChild(script);
+  script.remove();
+  return localStorage.getItem(PAGE_VARIABLE_KEY);
+};
+
+const FB_BASE = 'https://www.facebook.com';
+const getAdTargetingQueryParams = ajaxifyUrl =>
+  grabVariableAti(
+    /* istanbul ignore next */
+    url => {
+      const parsed = new (window.require('URI'))(url);
+      localStorage.setItem('url', url);
+      const req = new window.AsyncRequest()
+        .setURI(url)
+        .setData(parsed)
+        .setMethod('GET')
+        .setRelativeTo(document.body)
+        .setNectarModuleDataSafe(document.body)
+        .setReadOnly(true);
+      Object.assign(req.data, { __asyncDialog: 1 });
+      Object.assign(req.data, window.require('getAsyncParams')(req.method));
+      req._setUserActionID();
+      req.setNewSerial();
+      return req.uri.addQueryData(req.data).toString();
+    },
+    [ajaxifyUrl]
+  );
+
+
+const NAME = '[name=fb_dtsg]';
+``
+/**
+ *  Get the fbDtsg token value from the post element.
+ *
+ *  @param element - A facebook post element.
+ *  @returns The fb_dtsg CSRF token associated with the given element.
+ */
+const getFbDtsgFromPostElement = element => {
+  const fbDtsgElement = element.querySelectorAll(NAME)[0];
+
+  return fbDtsgElement ? fbDtsgElement.value : null;
+};
+
+const cleanAndParse = text => JSON.parse(text.replace('for (;;);', ''));
+
+const getAdTargetingData = async ({ adTargetingUrl, fbDtsg }) => {
+  try {
+    const body = makeBody({ adTargetingUrl, fbDtsg });
+    const { url, metadata } = makeGraphQlRequest(body);
+    // console.debug('metadata', metadata);
+    const doFetch =
+      window.content && window.content.fetch
+        ? window.content.fetch
+        : window.fetch;
+
+    const response = await doFetch(url, metadata);
+
+    if (!response.ok) return null;
+    const text = await response.text();
+    const json = cleanAndParse(text);
+    if (json.errors) {
+      // console.debug('server returned errors', json.errors);
+      return null;
+    }
+    return json;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+
+const getDataFromUrl = url => {
+  const [_base, params] = url.split('?');
+  const pairs = params.split('&');
+
+  return pairs.reduce((acc, elem) => {
+    const [key, value] = elem.split('=');
+    acc[key] = value; // don't bother to url decode
+    return acc;
+  }, {});
+};
+
+/**
+ *  Construct the data needed for the variables param.
+ *
+ *  @param adId — The adId previously extracted from the post
+ *  @param clientToken — The client token prpreviously extracted from the post
+ *  @return a URI encoded string of concatenated parameters
+ */
+const makeVariables = (adId, clientToken) =>
+  encodeURIComponent(
+    JSON.stringify({
+      adId,
+      clientToken: decodeURIComponent(clientToken)
+    })
+  );
+
+/**
+ *  Construct the body of the request to the graphql endpoint.
+ *
+ *  @param An object containing the data needed to construct the body
+ *  @return The URI encoded concatenated body string.
+ */
+const makeBody = ({ adTargetingUrl, fbDtsg }) => {
+  // hard code this as extracting it from jsmods is unreliable.
+  const componentName = 'AdsPrefWAISTDialogQuery';
+  // hard coding this seems to work.
+  const WAIST_GRAPHQL_DOC_ID = '2602243929890886';
+
+  const {
+    id: adId,
+    client_token: clientToken,
+    __user,
+    __a,
+    __dyn,
+    __csr,
+    __req,
+    __beoa,
+    __pc,
+    dpr,
+    __rev,
+    __s,
+    __hsi,
+    jazoest,
+    __spin_r,
+    __spin_b,
+    __spin_t
+  } = getDataFromUrl(adTargetingUrl);
+
+  const body = {
+    av: __user,
+    __user,
+    __a,
+    __dyn,
+    __csr,
+    __req,
+    __beoa,
+    __pc,
+    dpr,
+    __rev,
+    __s,
+    __hsi,
+    fb_dtsg: fbDtsg,
+    jazoest,
+    __spin_r,
+    __spin_b,
+    __spin_t,
+    fb_api_caller_class: 'RelayModern',
+    fb_api_req_friendly_name: componentName,
+    variables: makeVariables(adId, clientToken),
+    doc_id: WAIST_GRAPHQL_DOC_ID
+  };
+
+  return Object.keys(body).reduce((acc, elem, i) => {
+    const pair = `${elem}=${body[elem]}`;
+    acc = i === 0 ? pair : [acc, '&', pair].join('');
+    return acc;
+  }, '');
+};
+
+/**
+ *  Build the details needed to supply to fetch to perform the
+ *  request for ad targeting data.
+ *
+ *  @param body — The body string built with makeBody.
+ *  @returns the url and metadata to supply to fetch.
+ */
+const makeGraphQlRequest = body => ({
+  url: 'https://www.facebook.com/api/graphql/',
+  metadata: {
+    credentials: 'include',
+    headers: {
+      accept: '*/*',
+      'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+      'content-type': 'application/x-www-form-urlencoded',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'same-origin',
+      'viewport-width': '800'
+    },
+    referrer: 'https://www.facebook.com/',
+    referrerPolicy: 'origin-when-cross-origin',
+    body,
+    method: 'POST',
+    mode: 'cors'
+  }
+});
+
 
 class StateMachine {
   constructor() {
@@ -307,31 +506,38 @@ export class Parser extends StateMachine {
       },
       [this.targetingUrl]
     );
+    const queryParams = getAdTargetingQueryParams(built);
+    const adTargetingUrl = `${FB_BASE}${queryParams}`;
+    const fbDtsg = getFbDtsgFromPostElement(this.states.indexOf(states.SIDEBAR_ID) > -1 ? document.querySelector("#feedx_sprouts_container") : this.node); // if this is sidebar, it should be #feedx_sprouts_container
 
     const req = new XMLHttpRequest();
     req.onreadystatechange = () => {
       if (req.readyState === 4) {
         try {
           let targeting = null;
+          let jsmods = JSON.parse(req.response.replace("for (;;);", ""))["jsmods"]
           try{
-            targeting = cleanAd(JSON.parse(req.response.replace("for (;;);", ""))["jsmods"]["markup"][0][1]["__html"]);
+            targeting = cleanAd(jsmods["markup"][0][1]["__html"]);
             if(targeting === null){ // sometimes the old-style targeting string still exists but is blank :shrug:
               throw TypeError;
             }
+            targetingCache.set(this.targetingUrl, targeting);
+            this.ad.targeting = targeting;
+            this.promote(states.DONE);
           }catch(TypeError){
-            console.log(JSON.parse(req.response.replace("for (;;);", "")))
-            let targeting_json = JSON.parse(req.response.replace("for (;;);", ""))["jsmods"]["pre_display_requires"][0][3][1].__bbox.result.data;
-            for(let obj of targeting_json.waist_targeting_data){
-              delete obj["birthday"];
-            }
-            console.log("targeting json", targeting_json);
-            targeting = JSON.stringify(targeting_json);
+            let targetingProm = getAdTargetingData({'adTargetingUrl': adTargetingUrl, 'fbDtsg': fbDtsg})
+            targetingProm.then((targeting_json) => {
+              if (!targeting_json) return this.promote(states.DONE);
+              for(let obj of targeting_json.data.waist_targeting_data){
+                delete obj["birthday"];
+              }
+              targeting = JSON.stringify(targeting_json);
+              targetingCache.set(this.targetingUrl, targeting);
+              this.ad.targeting = targeting;
+              this.promote(states.DONE);
+            });
           }
-          if (!targeting) return this.promote(states.DONE);
-          targetingCache.set(this.targetingUrl, targeting);
-          this.ad.targeting = targeting;
-          console.log("this.ad", this.ad);
-          this.promote(states.DONE);
+
         } catch (e) {
           if (DEBUG) console.log("error getting targeting", e, req.response.errorSummary);
           targetingBlocked = true;
@@ -342,7 +548,6 @@ export class Parser extends StateMachine {
     };
     this.promote(states.WAIT_TARGETING);
     req.open("GET", "https://www.facebook.com" + built, true);
-    console.log("built", built.length)
     req.send();
   }
 
@@ -669,40 +874,53 @@ const getVisibleText = function(elem) {
   - Tom Cardoso, April 2, 2019
 */
 
+const hasAncestorWithClass = function(currentElement, topLevelElement, searchClass) {
+  let parent = currentElement.parentElement,
+    resolution = false;
+  while (!resolution) {
+    if (parent === topLevelElement) break;
+    if (parent.classList.contains(searchClass)) {
+      resolution = true;
+    } else {
+      parent = parent.parentElement;  
+    }
+  }
+  return resolution;
+};
+
+
 export const checkSponsor = (node, originalNode) => {
   if (!node) return false;
-
   const nodes = node.querySelectorAll([
-      ":scope .clearfix a",
+      ":scope .clearfix a[href^='/']",
+      ":scope .clearfix a[href^='#']",
+      ":scope .clearfix a[role^='button']",
       ":scope [id^='feed_sub']",
       ":scope [data-testid='story-subtitle']",
       ":scope [data-testid='story-subtilte']",
       ":scope .ego_section a"
-    ].join(", "));
-
-  const nodeArr = Array.from(nodes);
-
+    ]
+    .join(", "));
+  let nodeArr = Array.from(nodes);
+  if (!originalNode) {
+    // if matched node's ancestor has a class of .userContent, toss it
+    nodeArr = nodeArr.filter(n => !hasAncestorWithClass(n, node, 'userContent'))
+  }
   if (!nodeArr.length) return false;
-
   // if we have a source `this.node` for comparison, such as
   // in sidebars, we'll use it to compare against the new text
   const originalNodeText = originalNode ? getVisibleText(originalNode) : false;
-
   // traverse the children
   return nodeArr.some(postSubtitle => {
-
     // Lately, Facebook seems to have changed approaches to occasionally
     // storing the string elements in a bunch of empty spans with a
     // data-content attribute that stores the actual letter for the string.
     // The Sponsored string is then apparently constructed using either JS
     // or CSS ::after pseudo-styles, so we need to account for those below.
     const dataContentSpans = Array.from(postSubtitle.querySelectorAll(":scope span[data-content]"));
-
     // if textContent is empty and no data-content spans, exit the function
     if (!postSubtitle.textContent && dataContentSpans.length === 0) return;
-
     let visibleText;
-
     // If there are data-content spans, need to account for that here
     if (dataContentSpans.length) {
       const visibleSpanStrs = dataContentSpans
@@ -712,14 +930,12 @@ export const checkSponsor = (node, originalNode) => {
     } else {
       visibleText = getVisibleText(postSubtitle);
     }
-
     // To make sure we're only checking for the text of the current node
     // (as opposed to ALL the text of the parent container) we
     // do a quick replace here.
     if (originalNodeText) visibleText = visibleText.replace(originalNodeText, "");
-
+    if (visibleText.length < sponsoredTranslation.length) return false;
     return checkIfContains(sponsoredTranslation, visibleText);
-
   });
 };
 
